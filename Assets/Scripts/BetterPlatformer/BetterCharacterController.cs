@@ -13,6 +13,7 @@ public class BetterCharacterController : MonoBehaviour
 {
     protected bool facingRight = true;
     protected bool jumped;
+    public bool jumping = false;
     public int maxJumps;
     protected int currentjumpCount;
 
@@ -41,6 +42,8 @@ public class BetterCharacterController : MonoBehaviour
     protected Vector2 playerSize, boxSize;
     protected Animator anim;
 
+    public int score = 0;
+
     private void Start()
     {
         anim = GetComponentInChildren<Animator>();
@@ -58,6 +61,13 @@ public class BetterCharacterController : MonoBehaviour
         //Box Overlap Ground Check
         Vector2 boxCenter = new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y);
         grounded = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundedLayers) != null;
+        anim.SetBool("Grounded", grounded);
+
+        if (grounded && jumping)
+        {
+            jumping = false;
+            anim.SetBool("Jumping", false);
+        }
 
         if (horizInput != 0)
         {
@@ -90,7 +100,8 @@ public class BetterCharacterController : MonoBehaviour
         {
             Debug.Log(Time.fixedDeltaTime);
             rb.AddForce(new Vector2(0f, jumpForce));
-            Debug.Log("Jumping!");
+            jumping = true;
+            anim.SetBool("Jumping", true);
 
             jumped = false;
         }
@@ -142,7 +153,6 @@ public class BetterCharacterController : MonoBehaviour
         {
             jumped = true;
             currentjumpCount--;
-            Debug.Log("Should jump");
         }
 
         //Get Player input 
@@ -160,6 +170,7 @@ public class BetterCharacterController : MonoBehaviour
     {
 
         sliding = true;
+        anim.SetBool("Sliding", true);
 
         if (facingRight)
         {
@@ -176,5 +187,6 @@ public class BetterCharacterController : MonoBehaviour
     {
         yield return new WaitForSeconds(slideDuration);
         sliding = false;
+        anim.SetBool("Sliding", false);
     }
 }
