@@ -6,27 +6,30 @@ public class Cherry : MonoBehaviour
 {
 
     public int scoreValue = 100;
+    protected Animator anim;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        anim = GetComponentInChildren<Animator>();
     }
-
-    // Update is called once per frame
-    void Update()
+    IEnumerator Disappear(float time)
     {
-        
+        yield return new WaitForSeconds(time);
+
+        Destroy(gameObject);
+
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(gameObject);
-        Debug.Log("Collected");
+
+        Debug.Log(other.tag);
         
         if (other.tag == "Player")
         {
             other.GetComponent<BetterCharacterController>().score += scoreValue;
+            anim.SetBool("Collected", true);
+            StartCoroutine(Disappear(0.5f));
         }
        
     }
