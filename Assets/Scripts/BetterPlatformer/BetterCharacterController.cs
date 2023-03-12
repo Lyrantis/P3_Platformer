@@ -33,7 +33,7 @@ public class BetterCharacterController : MonoBehaviour
 
     private float horizInput;
 
-    bool grounded;
+    public bool grounded;
 
     public Rigidbody2D rb;
 
@@ -64,6 +64,7 @@ public class BetterCharacterController : MonoBehaviour
         grounded = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundedLayers) != null;
         anim.SetBool("Grounded", grounded);
 
+        Debug.Log(grounded);
         if (grounded && jumping)
         {
             jumping = false;
@@ -194,6 +195,21 @@ public class BetterCharacterController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        if (grounded)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawCube(new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y), boxSize);
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y), boxSize);
+        }
     }
 
 }

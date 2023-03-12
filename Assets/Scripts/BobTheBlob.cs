@@ -21,8 +21,13 @@ public class BobTheBlob : MonoBehaviour
     Vector2 edgeCheckSize;
     Vector2 groundCheckSize;
 
+    Vector2 wallCheckPos;
+    Vector2 wallCheckSize;
+    float wallCheckOffset = 0.5f;
+
     bool edgeCheck;
     bool groundCheck;
+    bool wallCheck;
     float direction;
     float attackTime = 2.0f;
 
@@ -53,6 +58,8 @@ public class BobTheBlob : MonoBehaviour
 
         edgeCheckSize = new Vector2(0.5f, 0.5f);
         groundCheckSize = new Vector2(0.25f, 0.25f);
+        wallCheckSize = new Vector2(0.5f, 0.5f);
+
         anim.SetBool("Moving", true);
 
     }
@@ -61,15 +68,16 @@ public class BobTheBlob : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(moving);
         if (moving)
         {
             edgeCheckPos = new Vector2(transform.position.x + (direction * edgeCheckOffset.x), transform.position.y - edgeCheckOffset.y);
+            wallCheckPos = new Vector2(transform.position.x + (direction * wallCheckOffset), transform.position.y);
 
             edgeCheck = Physics2D.OverlapBox(edgeCheckPos, edgeCheckSize, 0, collisionLayer);
             groundCheck = Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, collisionLayer) != null;
+            wallCheck = Physics2D.OverlapBox(wallCheckPos, wallCheckSize, 0, collisionLayer);
 
-            if (groundCheck && !edgeCheck)
+            if (groundCheck && (!edgeCheck || wallCheck))
             {
                 moving = false;
                 anim.SetBool("Moving", false);
@@ -141,7 +149,6 @@ public class BobTheBlob : MonoBehaviour
 
             if (moving)
             {
-                Debug.Log("Stopping");
                 moving = false;
                 rb.velocity = new Vector2(0, 0);
                 movingBeforeAttack = true;
@@ -191,6 +198,17 @@ public class BobTheBlob : MonoBehaviour
     //        Gizmos.color = Color.red;
     //        Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
     //    }
+    //    if (wallCheck)
+    //    {
+    //        Gizmos.color = Color.yellow;
+    //        Gizmos.DrawCube(wallCheckPos, wallCheckSize);
+    //    }
+    //    else
+    //    {
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawCube(wallCheckPos, wallCheckSize);
+    //    }
+
     //}
 
 }
