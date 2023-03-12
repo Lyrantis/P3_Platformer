@@ -13,26 +13,27 @@ public class BetterCharacterController : MonoBehaviour
 {
     protected bool facingRight = true;
     protected bool jumped;
-    public bool jumping = false;
+    bool jumping = false;
     public int maxJumps;
     protected int currentjumpCount;
 
 
-    public bool crouched;
+    bool crouched;
     public float crouchSpeed;
 
     public float slideSpeed;
     public float slideDuration;
     bool sliding;
 
+    public float health = 100;
     public bool running;
     public float speed = 5.0f;
     public float jumpForce = 1000;
-    public float currentSpeed = 0.0f;
+    float currentSpeed = 0.0f;
 
     private float horizInput;
 
-    public bool grounded;
+    bool grounded;
 
     public Rigidbody2D rb;
 
@@ -189,4 +190,10 @@ public class BetterCharacterController : MonoBehaviour
         sliding = false;
         anim.SetBool("Sliding", false);
     }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+    }
+
 }
