@@ -44,6 +44,8 @@ public class BetterCharacterController : MonoBehaviour
     protected Vector2 playerSize, boxSize;
     protected Animator anim;
 
+    PlayerInputActions playerInputActions;
+
     public int score = 0;
 
     private void Start()
@@ -56,10 +58,22 @@ public class BetterCharacterController : MonoBehaviour
         charCollision = GetComponent<Collider2D>();
         playerSize = charCollision.bounds.extents;
         boxSize = new Vector2(playerSize.x, 0.05f);
+
+        playerInputActions = new PlayerInputActions();
+        playerInputActions.Player.Enable();
+
+        playerInputActions.Player.Jump.performed += Jump;
+        playerInputActions.Player.Crouch.performed += Crouch;
+        playerInputActions.Player.Crouch.canceled += Crouch;
+        playerInputActions.Player.Slide.performed += Slide;
+        playerInputActions.Player.Slide.canceled += Slide;
     }
 
     void FixedUpdate()
     {
+
+        horizInput = playerInputActions.Player.Movement.ReadValue<float>();
+
         //Box Overlap Ground Check
         Vector2 boxCenter = new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y);
         grounded = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundedLayers) != null;
@@ -81,6 +95,7 @@ public class BetterCharacterController : MonoBehaviour
         }
 
         anim.SetBool("Running", running);
+
 
         if (crouched)
         {
@@ -120,44 +135,11 @@ public class BetterCharacterController : MonoBehaviour
 
     void Update()
     {
-        //if (grounded)
-        //{
-        //    currentjumpCount = maxJumps;
+        if (grounded)
+        {
+            currentjumpCount = maxJumps;
+        }
 
-        //    if (/*Input.GetKeyDown(KeyCode.LeftShift)*/ && sliding == false) 
-        //    {
-
-        //        if (currentSpeed > 0 || currentSpeed < 0)
-        //        {
-        //            CharacterSlide();
-        //        }
-        //    } 
-
-        //    if (/*Input.GetKeyDown(KeyCode.S)*/)
-        //    {
-        //        crouched = true;
-        //        anim.SetBool("Crouched", true);
-        //    }
-        //}
-
-        //if (crouched)
-        //{
-        //    if (/*Input.GetKeyUp(KeyCode.S)*/)
-        //    {
-        //        crouched = false;
-        //        anim.SetBool("Crouched", false);
-        //    }
-        //}
-
-        ////Input for jumping ***Multi Jumping***
-        //if (/*Input.GetButtonDown("Jump")*/ && currentjumpCount > 1)
-        //{
-        //    jumped = true;
-        //    currentjumpCount--;
-        //}
-
-        ////Get Player input 
-        //horizInput = /*Input.GetAxis("Horizontal")*/;     
     }
 
     // Flip Character Sprite
@@ -167,7 +149,44 @@ public class BetterCharacterController : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
-    void CharacterSlide()
+    IEnumerator CancelSlide()
+    {
+        yield return new WaitForSeconds(slideDuration);
+        sliding = false;
+        anim.SetBool("Sliding", false);
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        horizInput = context.ReadValue<float>();
+    }
+    public void Jump(InputAction.CallbackContext context)
+    {
+        Debug.Log("Jumping!");
+
+        if (context.performed && currentjumpCount > 1)
+        {
+            jumped = true;
+            currentjumpCount--;
+        }
+        
+    }
+
+    public void Crouch(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            crouched = true;
+            anim.SetBool("Crouched", true);
+        }
+        else if (context.canceled)
+        {
+            crouched = false;
+            anim.SetBool("Crouched", false);
+        }
+    }
+
+    public void Slide(InputAction.CallbackContext context)
     {
 
         sliding = true;
@@ -182,20 +201,7 @@ public class BetterCharacterController : MonoBehaviour
             rb.AddForce(Vector2.left * slideSpeed);
         }
         StartCoroutine(CancelSlide());
-    }
 
-    IEnumerator CancelSlide()
-    {
-        yield return new WaitForSeconds(slideDuration);
-        sliding = false;
-        anim.SetBool("Sliding", false);
-    }
-
-    public void Jump(InputAction.CallbackContext context)
-    {
-        Debug.Log("Jumping!");
-        jumped = true;
-        currentjumpCount--;
     }
 
     public void TakeDamage(float damage)
