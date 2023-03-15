@@ -200,16 +200,16 @@ public class BetterCharacterController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (grounded)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawCube(new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y), boxSize);
-        }
-        else
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawCube(new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y), boxSize);
-        }
+        //if (grounded)
+        //{
+        //    Gizmos.color = Color.yellow;
+        //    Gizmos.DrawCube(new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y), boxSize);
+        //}
+        //else
+        //{
+        //    Gizmos.color = Color.red;
+        //    Gizmos.DrawCube(new Vector2(transform.position.x + charCollision.offset.x, transform.position.y + -(playerSize.y + boxSize.y - 0.01f) + charCollision.offset.y), boxSize);
+        //}
     }
 
 }
