@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.InputSystem;
 
 //--------------------------------------------
 /*Better Character Controller Includes:
@@ -65,7 +65,6 @@ public class BetterCharacterController : MonoBehaviour
         grounded = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundedLayers) != null;
         anim.SetBool("Grounded", grounded);
 
-        Debug.Log(grounded);
         if (grounded && jumping)
         {
             jumping = false;
@@ -101,7 +100,6 @@ public class BetterCharacterController : MonoBehaviour
         //Jump
         if (jumped == true)
         {
-            Debug.Log(Time.fixedDeltaTime);
             rb.AddForce(new Vector2(0f, jumpForce));
             jumping = true;
             anim.SetBool("Jumping", true);
@@ -122,44 +120,44 @@ public class BetterCharacterController : MonoBehaviour
 
     void Update()
     {
-        if (grounded)
-        {
-            currentjumpCount = maxJumps;
+        //if (grounded)
+        //{
+        //    currentjumpCount = maxJumps;
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && sliding == false) 
-            {
+        //    if (/*Input.GetKeyDown(KeyCode.LeftShift)*/ && sliding == false) 
+        //    {
 
-                if (currentSpeed > 0 || currentSpeed < 0)
-                {
-                    CharacterSlide();
-                }
-            } 
+        //        if (currentSpeed > 0 || currentSpeed < 0)
+        //        {
+        //            CharacterSlide();
+        //        }
+        //    } 
 
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                crouched = true;
-                anim.SetBool("Crouched", true);
-            }
-        }
+        //    if (/*Input.GetKeyDown(KeyCode.S)*/)
+        //    {
+        //        crouched = true;
+        //        anim.SetBool("Crouched", true);
+        //    }
+        //}
 
-        if (crouched)
-        {
-            if (Input.GetKeyUp(KeyCode.S))
-            {
-                crouched = false;
-                anim.SetBool("Crouched", false);
-            }
-        }
+        //if (crouched)
+        //{
+        //    if (/*Input.GetKeyUp(KeyCode.S)*/)
+        //    {
+        //        crouched = false;
+        //        anim.SetBool("Crouched", false);
+        //    }
+        //}
 
-        //Input for jumping ***Multi Jumping***
-        if (Input.GetButtonDown("Jump") && currentjumpCount > 1)
-        {
-            jumped = true;
-            currentjumpCount--;
-        }
+        ////Input for jumping ***Multi Jumping***
+        //if (/*Input.GetButtonDown("Jump")*/ && currentjumpCount > 1)
+        //{
+        //    jumped = true;
+        //    currentjumpCount--;
+        //}
 
-        //Get Player input 
-        horizInput = Input.GetAxis("Horizontal");     
+        ////Get Player input 
+        //horizInput = /*Input.GetAxis("Horizontal")*/;     
     }
 
     // Flip Character Sprite
@@ -193,11 +191,17 @@ public class BetterCharacterController : MonoBehaviour
         anim.SetBool("Sliding", false);
     }
 
+    public void Jump(InputAction.CallbackContext context)
+    {
+        Debug.Log("Jumping!");
+        jumped = true;
+        currentjumpCount--;
+    }
+
     public void TakeDamage(float damage)
     {
         health -= damage;
     }
-
 
     private void OnDrawGizmos()
     {
@@ -213,4 +217,7 @@ public class BetterCharacterController : MonoBehaviour
         //}
     }
 
+  
+
 }
+
