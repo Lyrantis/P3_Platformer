@@ -237,4 +237,9 @@ public class BobTheBlob : MonoBehaviour
 
     //}
 
+    private void OnDestroy()
+    {
+        UIManager.Instance.AddScore(100);
+    }
+
 }

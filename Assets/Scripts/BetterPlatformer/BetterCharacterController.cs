@@ -26,7 +26,7 @@ public class BetterCharacterController : MonoBehaviour
     public float slideDuration;
     bool sliding;
 
-    public float health = 100;
+    public float health = 3;
     public bool running;
     public float speed = 5.0f;
     public float jumpForce = 1000;
@@ -79,10 +79,23 @@ public class BetterCharacterController : MonoBehaviour
         grounded = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundedLayers) != null;
         anim.SetBool("Grounded", grounded);
 
-        if (grounded && jumping)
+        if (!grounded && rb.velocity.y < 0)
         {
-            jumping = false;
+            anim.SetBool("Falling", true);
             anim.SetBool("Jumping", false);
+        }
+        
+
+        if (grounded)
+        {
+            anim.SetBool("Falling", false);
+            
+            if (jumping)
+            {
+                jumping = false;
+                anim.SetBool("Jumping", false);
+            } 
+            
         }
 
         if (horizInput != 0)
