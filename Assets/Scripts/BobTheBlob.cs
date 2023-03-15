@@ -12,6 +12,7 @@ public class BobTheBlob : MonoBehaviour
     [SerializeField] bool facingRight;
     [SerializeField] float moveSpeed;
     [SerializeField] float timeBetweenTurn;
+    [SerializeField] int damage;
     [SerializeField] Transform groundCheckPos;
     [SerializeField] Transform attackBoxPos;
     [SerializeField] LayerMask collisionLayer;
@@ -30,6 +31,9 @@ public class BobTheBlob : MonoBehaviour
     bool wallCheck;
     float direction;
     float attackTime = 2.0f;
+    bool playerInRange = false;
+    bool ableToAttack = true;
+    public float AttackCooldown;
 
     bool moving = true;
     bool movingBeforeAttack = false;
@@ -142,10 +146,11 @@ public class BobTheBlob : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && ableToAttack)
         {
             anim.SetBool("Attacking", true);
             anim.SetBool("Moving", false);
+            playerInRange = true;
 
             if (moving)
             {
@@ -154,25 +159,46 @@ public class BobTheBlob : MonoBehaviour
                 movingBeforeAttack = true;
             }
 
-            other.GetComponent<BetterCharacterController>().TakeDamage(20.0f);
-            StartCoroutine(Attack(attackTime));
+            ableToAttack = false;
+            StartCoroutine(Attack(other, attackTime));
         }
     }
 
-    IEnumerator Attack(float time)
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            playerInRange = false;  
+        }
+    }
+
+    IEnumerator Attack(Collider2D other, float time)
     {
 
         yield return new WaitForSeconds(time);
 
         anim.SetBool("Attacking", false);
+        if (playerInRange)
+        {
+            other.GetComponent<HealthComponent>().TakeDamage(damage);
+        }
 
         if (movingBeforeAttack)
         {
             moving = true;
             anim.SetBool("Moving", true);
             movingBeforeAttack = false;
+            StartCoroutine(Cooldown(AttackCooldown));
         }
 
+    }
+
+    IEnumerator Cooldown(float cooldown)
+    {
+
+        yield return new WaitForSeconds(cooldown);
+
+        ableToAttack = true;
     }
 
     //private void OnDrawGizmos()

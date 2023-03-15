@@ -17,6 +17,7 @@ public class BetterCharacterController : MonoBehaviour
     public int maxJumps;
     protected int currentjumpCount;
 
+    public Transform RespawnPoint;
 
     bool crouched;
     public float crouchSpeed;
