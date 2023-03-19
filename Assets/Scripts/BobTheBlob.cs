@@ -239,7 +239,11 @@ public class BobTheBlob : MonoBehaviour
 
     private void OnDestroy()
     {
-        UIManager.Instance.AddScore(100);
+        if (this.gameObject.scene.isLoaded)
+        {
+            UIManager.Instance.AddScore(100);
+        }
+        
     }
 
 }

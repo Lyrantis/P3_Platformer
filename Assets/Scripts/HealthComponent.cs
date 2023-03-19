@@ -8,11 +8,13 @@ public class HealthComponent : MonoBehaviour
     public int MaxHealth;
     private int currentHealth;
 
+    bool takingDamage = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentHealth = MaxHealth;
     }
 
     // Update is called once per frame
@@ -23,13 +25,35 @@ public class HealthComponent : MonoBehaviour
 
     public void TakeDamage(int Damage)
     {
-        currentHealth -= Damage;
 
-        if (currentHealth <= 0)
+        if (!takingDamage)
         {
-            currentHealth = 0;
-            Die();
+            currentHealth -= Damage;
+            takingDamage = true;
+            Debug.Log(currentHealth);
+
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                Die();
+            }
+            else
+            {
+                
+
+                if (gameObject.tag == "Player")
+                {
+                    Debug.Log("HERE");
+                    gameObject.GetComponent<BetterCharacterController>().TakeDamage();
+                }
+            }
         }
+        
+    }
+
+    public void StopTakingDamage()
+    {
+        takingDamage=false;
     }
 
     void Die()
@@ -37,10 +61,13 @@ public class HealthComponent : MonoBehaviour
         if (gameObject.tag == "Player")
         {
             gameObject.transform.position = gameObject.GetComponent<BetterCharacterController>().RespawnPoint.position;
+            currentHealth = MaxHealth;
+            takingDamage = false;
         }
         else
         {
             Destroy(gameObject);
+            Destroy(this);
         }
         
     }

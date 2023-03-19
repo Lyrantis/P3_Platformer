@@ -24,9 +24,11 @@ public class BetterCharacterController : MonoBehaviour
 
     public float slideSpeed;
     public float slideDuration;
-    bool sliding;
+    bool sliding = false;
 
-    public float health = 3;
+    bool takingDamage = false;
+    float iFrames = 2.0f;
+
     public bool running;
     public float speed = 5.0f;
     public float jumpForce = 1000;
@@ -72,6 +74,16 @@ public class BetterCharacterController : MonoBehaviour
     void FixedUpdate()
     {
 
+        if (takingDamage)
+        {
+            if (rb.velocity.x == 0 && rb.velocity.y == 0)
+            {
+                takingDamage = false;
+                anim.SetBool("Damaged", false);
+                playerInputActions.Enable();
+                gameObject.GetComponent<HealthComponent>().StopTakingDamage();
+            }
+        }
         horizInput = playerInputActions.Player.Movement.ReadValue<float>();
 
         //Box Overlap Ground Check
@@ -187,7 +199,7 @@ public class BetterCharacterController : MonoBehaviour
 
     public void Crouch(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && grounded)
         {
             crouched = true;
             anim.SetBool("Crouched", true);
@@ -217,9 +229,36 @@ public class BetterCharacterController : MonoBehaviour
 
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage()
     {
-        health -= damage;
+
+        takingDamage = true;
+        anim.SetBool("Damaged", true);
+        playerInputActions.Disable();
+
+        StartCoroutine(EndIFrames(iFrames / 2));
+    }
+
+    IEnumerator EndIFrames(float iFrameTime)
+    {
+
+        yield return new WaitForSeconds(iFrameTime);
+
+        playerInputActions.Enable();
+        anim.SetBool("Damaged", false);
+
+        StartCoroutine(BecomeVulnerable(iFrameTime));
+
+
+    }
+
+    IEnumerator BecomeVulnerable(float iFrameTime)
+    {
+
+        yield return new WaitForSeconds(iFrameTime);
+
+        takingDamage = false;
+        gameObject.GetComponent<HealthComponent>().StopTakingDamage();
     }
 
     private void OnDrawGizmos()
