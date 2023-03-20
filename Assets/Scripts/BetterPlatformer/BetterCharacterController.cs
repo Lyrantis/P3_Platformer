@@ -74,16 +74,6 @@ public class BetterCharacterController : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (takingDamage)
-        {
-            if (rb.velocity.x == 0 && rb.velocity.y == 0)
-            {
-                takingDamage = false;
-                anim.SetBool("Damaged", false);
-                playerInputActions.Enable();
-                gameObject.GetComponent<HealthComponent>().StopTakingDamage();
-            }
-        }
         horizInput = playerInputActions.Player.Movement.ReadValue<float>();
 
         //Box Overlap Ground Check
@@ -258,7 +248,6 @@ public class BetterCharacterController : MonoBehaviour
         yield return new WaitForSeconds(iFrameTime);
 
         takingDamage = false;
-        gameObject.GetComponent<HealthComponent>().StopTakingDamage();
     }
 
     private void OnDrawGizmos()

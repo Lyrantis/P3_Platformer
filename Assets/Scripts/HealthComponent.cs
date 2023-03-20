@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
@@ -7,7 +8,7 @@ public class HealthComponent : MonoBehaviour
 
     public int MaxHealth;
     private int currentHealth;
-
+    public float iFrameTime = 2.0f;
     bool takingDamage = false;
 
 
@@ -30,12 +31,13 @@ public class HealthComponent : MonoBehaviour
         {
             currentHealth -= Damage;
             takingDamage = true;
-            Debug.Log(currentHealth);
+            StartCoroutine(IFrames(iFrameTime));
 
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
                 Die();
+ 
             }
             else
             {
@@ -43,7 +45,7 @@ public class HealthComponent : MonoBehaviour
 
                 if (gameObject.tag == "Player")
                 {
-                    Debug.Log("HERE");
+                    UIManager.Instance.RemoveHeart();
                     gameObject.GetComponent<BetterCharacterController>().TakeDamage();
                 }
             }
@@ -51,18 +53,13 @@ public class HealthComponent : MonoBehaviour
         
     }
 
-    public void StopTakingDamage()
-    {
-        takingDamage=false;
-    }
-
-    void Die()
+    public void Die()
     {
         if (gameObject.tag == "Player")
         {
             gameObject.transform.position = gameObject.GetComponent<BetterCharacterController>().RespawnPoint.position;
             currentHealth = MaxHealth;
-            takingDamage = false;
+            UIManager.Instance.ResetHearts();
         }
         else
         {
@@ -75,10 +72,25 @@ public class HealthComponent : MonoBehaviour
     public void Heal(int Healing)
     {
         currentHealth += Healing;
+        UIManager.Instance.AddHeart();
 
         if (currentHealth > MaxHealth)
         {
             currentHealth = MaxHealth;
+            
         }
     }
+
+    IEnumerator IFrames(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (currentHealth != 0)
+        {
+            takingDamage = false;
+        }
+        
+
+    }
+
 }

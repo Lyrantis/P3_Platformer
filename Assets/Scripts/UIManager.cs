@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public Text scoreText;
+    public List<GameObject> hearts;
     private int score = 0;
+    private int health = 3;
 
     private static UIManager instance;
 
@@ -50,6 +53,29 @@ public class UIManager : MonoBehaviour
     {
         score += scoreToAdd;
         scoreText.text = "Score: " + score.ToString();
+    }
+
+    public void RemoveHeart()
+    {
+
+        hearts[health - 1].SetActive(false);
+        health -= 1;
+    }
+
+    public void AddHeart()
+    {
+        hearts[health].SetActive(true);
+        health += 1;
+    }
+
+    public void ResetHearts()
+    {
+        health = 3;
+        
+        for (int i = 0; i < hearts.Count; i++)
+        {
+            hearts[i].SetActive(true);
+        }
     }
 
 }

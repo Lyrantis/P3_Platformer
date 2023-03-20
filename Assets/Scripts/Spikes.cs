@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Spikes : MonoBehaviour
 {
+
+    private bool playerOnSpikes = false;
+    GameObject player;
     // Start is called before the first frame update
     void Start()
     {
@@ -11,9 +14,12 @@ public class Spikes : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        if (playerOnSpikes)
+        {
+            player.GetComponent<HealthComponent>().TakeDamage(1);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -21,8 +27,14 @@ public class Spikes : MonoBehaviour
  
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("Colliding");
+            player = other.gameObject;
+            playerOnSpikes = true;
             other.gameObject.GetComponent<HealthComponent>().TakeDamage(1);
         }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        playerOnSpikes = false;
     }
 }

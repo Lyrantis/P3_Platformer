@@ -10,7 +10,8 @@ public class KillVolume : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.transform.position = respawnPoint.position;
+            
+            collision.GetComponent<HealthComponent>().Die();
         }
     }
 }

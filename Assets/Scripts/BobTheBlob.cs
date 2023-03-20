@@ -30,7 +30,7 @@ public class BobTheBlob : MonoBehaviour
     bool groundCheck;
     bool wallCheck;
     float direction;
-    float attackTime = 2.0f;
+    float attackTime = 0.2f;
     bool playerInRange = false;
     bool ableToAttack = true;
     public float AttackCooldown;
@@ -181,6 +181,7 @@ public class BobTheBlob : MonoBehaviour
         if (playerInRange)
         {
             other.GetComponent<HealthComponent>().TakeDamage(damage);
+            Attack(other, time);
         }
 
         if (movingBeforeAttack)
@@ -190,6 +191,8 @@ public class BobTheBlob : MonoBehaviour
             movingBeforeAttack = false;
             StartCoroutine(Cooldown(AttackCooldown));
         }
+
+        ableToAttack = true;
 
     }
 
