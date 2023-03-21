@@ -114,6 +114,7 @@ public class UIManager : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log("Should Start");
         SceneManager.LoadScene("Scenes/ParallaxPlatformer", LoadSceneMode.Single);
     }
 
