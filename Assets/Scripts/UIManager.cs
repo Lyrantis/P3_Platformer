@@ -52,6 +52,11 @@ public class UIManager : MonoBehaviour
         
     }
 
+    public void ScreamAtMe()
+    {
+        Debug.Log("AGHHHHHHHHHHHHHHHHHHHHHHHH");
+    }
+
     public void AddScore(int scoreToAdd)
     {
         score += scoreToAdd;
