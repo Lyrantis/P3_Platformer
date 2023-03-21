@@ -60,6 +60,7 @@ public class HealthComponent : MonoBehaviour
             gameObject.transform.position = gameObject.GetComponent<BetterCharacterController>().RespawnPoint.position;
             currentHealth = MaxHealth;
             UIManager.Instance.ResetHearts();
+            UIManager.Instance.RemoveLife();
         }
         else
         {
