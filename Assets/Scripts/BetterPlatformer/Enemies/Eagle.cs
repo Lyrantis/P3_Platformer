@@ -26,12 +26,13 @@ public class Eagle : MonoBehaviour
     bool edgeCheck;
     bool wallCheck;
     float direction;
-    float attackTime = 0.2f;
-    bool playerInRange = false;
-    bool ableToAttack = true;
+    bool angry = false;
+    public float angrySpeedMultiplier;
     public float AttackCooldown;
+    bool ableToAttack = true;
 
     bool moving = true;
+    bool swooping = false;
 
     private void Awake()
     {
@@ -54,7 +55,6 @@ public class Eagle : MonoBehaviour
         edgeCheckSize = new Vector2(0.5f, 0.5f);
         wallCheckSize = new Vector2(0.5f, 0.5f);
 
-        anim.SetBool("Moving", true);
     }
 
     // Update is called once per frame
@@ -71,7 +71,6 @@ public class Eagle : MonoBehaviour
             if (!edgeCheck || wallCheck)
             {
                 moving = false;
-                anim.SetBool("Moving", false);
 
                 rb.velocity = new Vector2(0.0f, 0.0f);
                 StartCoroutine(WaitAtEdge(timeBetweenTurn));
@@ -84,6 +83,10 @@ public class Eagle : MonoBehaviour
 
         if (moving)
         {
+            if (angry)
+            {
+                rb.velocity = new Vector2(direction * moveSpeed * angrySpeedMultiplier, rb.velocity.y);
+            }
             rb.velocity = new Vector2(direction * moveSpeed, rb.velocity.y);
         }
 
@@ -119,7 +122,6 @@ public class Eagle : MonoBehaviour
         edgeCheckBox.localPosition = new Vector2(direction * edgeCheckOffset.x, edgeCheckOffset.y);
 
         moving = true;
-        anim.SetBool("Moving", true);
     }
 
     IEnumerator WaitAtEdge(float waitTime)
@@ -130,65 +132,24 @@ public class Eagle : MonoBehaviour
 
     }
 
-    //private void OnTriggerEnter2D(Collider2D other)
-    //{
-    //    if (other.tag == "Player" && ableToAttack)
-    //    {
-    //        anim.SetBool("Attacking", true);
-    //        anim.SetBool("Moving", false);
-    //        playerInRange = true;
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        angry = true;
+    }
 
-    //        if (moving)
-    //        {
-    //            moving = false;
-    //            rb.velocity = new Vector2(0, 0);
-    //            movingBeforeAttack = true;
-    //        }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        angry = false;
+    }
 
-    //        ableToAttack = false;
-    //        StartCoroutine(Attack(other, attackTime));
-    //    }
-    //}
 
-    //private void OnTriggerExit2D(Collider2D other)
-    //{
-    //    if (other.tag == "Player")
-    //    {
-    //        playerInRange = false;
-    //    }
-    //}
+    IEnumerator Cooldown(float cooldown)
+    {
 
-    //IEnumerator Attack(Collider2D other, float time)
-    //{
+        yield return new WaitForSeconds(cooldown);
 
-    //    yield return new WaitForSeconds(time);
-
-    //    anim.SetBool("Attacking", false);
-    //    if (playerInRange)
-    //    {
-    //        other.GetComponent<HealthComponent>().TakeDamage(damage);
-    //        Attack(other, time);
-    //    }
-
-    //    if (movingBeforeAttack)
-    //    {
-    //        moving = true;
-    //        anim.SetBool("Moving", true);
-    //        movingBeforeAttack = false;
-    //        StartCoroutine(Cooldown(AttackCooldown));
-    //    }
-
-    //    ableToAttack = true;
-
-    //}
-
-    //IEnumerator Cooldown(float cooldown)
-    //{
-
-    //    yield return new WaitForSeconds(cooldown);
-
-    //    ableToAttack = true;
-    //}
+        ableToAttack = true;
+    }
 
     private void OnDrawGizmos()
     {
