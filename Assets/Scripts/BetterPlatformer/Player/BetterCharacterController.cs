@@ -49,6 +49,7 @@ public class BetterCharacterController : MonoBehaviour
     PlayerInputActions playerInputActions;
 
     public int score = 0;
+    private int gemCount = 0;
 
     private void Start()
     {
@@ -248,6 +249,16 @@ public class BetterCharacterController : MonoBehaviour
         yield return new WaitForSeconds(iFrameTime);
 
         takingDamage = false;
+    }
+
+    public int GetGemCount()
+    {
+        return gemCount;
+    }
+
+    public void AddGem(int gemValue)
+    {
+        gemCount += gemValue;
     }
 
     private void OnDrawGizmos()
