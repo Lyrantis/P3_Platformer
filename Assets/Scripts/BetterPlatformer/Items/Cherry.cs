@@ -26,6 +26,7 @@ public class Cherry : MonoBehaviour
         if (other.tag == "Player")
         {
             UIManager.Instance.AddScore(scoreValue);
+            UIManager.Instance.AddHeart();
             anim.SetBool("Collected", true);
             StartCoroutine(Disappear(0.5f));
         }

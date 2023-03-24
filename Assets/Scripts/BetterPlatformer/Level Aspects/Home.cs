@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Home : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Home : MonoBehaviour
         {
             if (other.GetComponent<BetterCharacterController>().GetGemCount() >= GemsRequired)
             {
-                //Game won
+                SceneManager.LoadScene("Main Menu", LoadSceneMode.Single);
             } 
             else
             {

@@ -31,7 +31,6 @@ public class UIManager : MonoBehaviour
         {
             if (instance == null)
             {
-                DontDestroyOnLoad(gameObject);
                 instance = this;
             }
             else if (instance != this)
@@ -46,7 +45,12 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerMessage.text = "";
+        if (playerMessage != null)
+        {
+            playerMessage.text = "Collect 35 gems and get home!";
+            StartCoroutine(HideMessage(messageTime));
+        }
+        
     }
 
     // Update is called once per frame
@@ -121,11 +125,14 @@ public class UIManager : MonoBehaviour
         ResetHearts();
         ResetLives();
 
+        Destroy(this);
+        instance = null;
         SceneManager.LoadScene("Scenes/ParallaxPlatformer", LoadSceneMode.Single);
     }
 
     public void GameOver()
     {
+        Destroy(this);
         SceneManager.LoadScene("Scenes/Game Over Screen", LoadSceneMode.Single);
     }
 
@@ -140,11 +147,28 @@ public class UIManager : MonoBehaviour
         StartCoroutine(HideMessage(messageTime));
     }
 
+    public void ResetEverything()
+    {
+        ResetHearts();
+        ResetLives();
+        if (playerMessage != null)
+        {
+            playerMessage.text = "Collect 35 gems and get home!";
+        }
+        
+        StartCoroutine(HideMessage(messageTime));
+        score = 0;
+    }
+
     IEnumerator HideMessage(float time)
     {
         yield return new WaitForSeconds(time);
 
-        playerMessage.text = "";
+        if (playerMessage != null)
+        {
+            playerMessage.text = "";
+        }
+        
     }
 
 }
