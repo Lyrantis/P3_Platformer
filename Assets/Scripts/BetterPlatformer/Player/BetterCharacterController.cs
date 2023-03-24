@@ -48,7 +48,6 @@ public class BetterCharacterController : MonoBehaviour
 
     PlayerInputActions playerInputActions;
 
-    public int score = 0;
     private int gemCount = 0;
 
     private void Start()

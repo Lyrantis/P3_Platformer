@@ -10,6 +10,9 @@ public class UIManager : MonoBehaviour
     public Text scoreText;
     public List<GameObject> hearts;
     public List<GameObject> lives;
+    public Text playerMessage;
+    public float messageTime = 3.0f;
+
     private int score = 0;
     private int health = 3;
     private int lifeCount = 3;
@@ -43,18 +46,13 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerMessage.text = "";
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    public void ScreamAtMe()
-    {
-        Debug.Log("AGHHHHHHHHHHHHHHHHHHHHHHHH");
     }
 
     public void AddScore(int scoreToAdd)
@@ -120,17 +118,33 @@ public class UIManager : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("Should Start");
+        ResetHearts();
+        ResetLives();
+
         SceneManager.LoadScene("Scenes/ParallaxPlatformer", LoadSceneMode.Single);
     }
 
     public void GameOver()
     {
-        SceneManager.LoadScene("Scenes/ParallaxPlatformer", LoadSceneMode.Single);
+        SceneManager.LoadScene("Scenes/Game Over Screen", LoadSceneMode.Single);
     }
 
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void DisplayMessage()
+    {
+        playerMessage.text = "You can't go home yet,\nYou need to steal more gems!";
+        StartCoroutine(HideMessage(messageTime));
+    }
+
+    IEnumerator HideMessage(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        playerMessage.text = "";
     }
 
 }

@@ -25,7 +25,7 @@ public class Cherry : MonoBehaviour
         
         if (other.tag == "Player")
         {
-            other.GetComponent<BetterCharacterController>().score += scoreValue;
+            UIManager.Instance.AddScore(scoreValue);
             anim.SetBool("Collected", true);
             StartCoroutine(Disappear(0.5f));
         }

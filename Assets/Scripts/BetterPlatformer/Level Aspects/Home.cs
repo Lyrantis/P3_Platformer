@@ -18,7 +18,7 @@ public class Home : MonoBehaviour
             } 
             else
             {
-                //Tell player to go find more gems
+                UIManager.Instance.DisplayMessage();
             }
         }
     }

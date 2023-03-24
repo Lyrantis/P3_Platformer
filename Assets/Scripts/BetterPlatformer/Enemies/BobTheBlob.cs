@@ -204,41 +204,41 @@ public class BobTheBlob : MonoBehaviour
         ableToAttack = true;
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    if (edgeCheck)
-    //    {
-    //        Gizmos.color = Color.yellow;
-    //        Gizmos.DrawCube(edgeCheckPos, edgeCheckSize);
-    //    }
-    //    else
-    //    {
-    //        Gizmos.color = Color.red;
-    //        Gizmos.DrawCube(edgeCheckPos, edgeCheckSize);
-    //    }
+    private void OnDrawGizmos()
+    {
+        if (edgeCheck)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawCube(edgeCheckPos, edgeCheckSize);
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(edgeCheckPos, edgeCheckSize);
+        }
 
-    //    if (groundCheck)
-    //    {
-    //        Gizmos.color = Color.yellow;
-    //        Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
-    //    }
-    //    else
-    //    {
-    //        Gizmos.color = Color.red;
-    //        Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
-    //    }
-    //    if (wallCheck)
-    //    {
-    //        Gizmos.color = Color.yellow;
-    //        Gizmos.DrawCube(wallCheckPos, wallCheckSize);
-    //    }
-    //    else
-    //    {
-    //        Gizmos.color = Color.red;
-    //        Gizmos.DrawCube(wallCheckPos, wallCheckSize);
-    //    }
+        if (groundCheck)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
+        }
+        if (wallCheck)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawCube(wallCheckPos, wallCheckSize);
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(wallCheckPos, wallCheckSize);
+        }
 
-    //}
+    }
 
     private void OnDestroy()
     {
