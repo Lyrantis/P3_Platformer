@@ -21,7 +21,7 @@ public class SceneChanger : MonoBehaviour
     public void StartGame()
     {
         canvas.gameObject.SetActive(false);
-        SceneManager.LoadScene("ParallaxPlatformer", LoadSceneMode.Single);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
         UIManager.Instance.ResetEverything();
 
     }
