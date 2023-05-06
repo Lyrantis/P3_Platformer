@@ -115,6 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 516186001}
   - component: {fileID: 516186002}
+  - component: {fileID: 6597651390586659899}
   m_Layer: 0
   m_Name: Vision Box
   m_TagString: Untagged
@@ -163,6 +164,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.3457491, y: 0.8437191}
   m_EdgeRadius: 0
+--- !u!114 &6597651390586659899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516186000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80616c7f11360a4fa2d419fdb890baf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1993150106
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +234,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 342262928413822770}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 8.041881, y: 9.126091, z: 0}
   m_LocalScale: {x: 4.4737, y: 4.4737, z: 4.4737}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -229,7 +242,7 @@ Transform:
   - {fileID: 516186001}
   - {fileID: 1993150107}
   m_Father: {fileID: 0}
-  m_RootOrder: 38
+  m_RootOrder: 39
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1880871365
 Rigidbody2D:
@@ -262,7 +275,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.007019736, y: 0.0070317984}
@@ -299,5 +312,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   edgeCheckOffset: {x: 0.25, y: -1}
+  player: {fileID: 0}
   angrySpeedMultiplier: 0
   AttackCooldown: 0

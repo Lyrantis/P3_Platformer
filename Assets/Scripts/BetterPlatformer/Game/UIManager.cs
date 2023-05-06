@@ -67,15 +67,17 @@ public class UIManager : MonoBehaviour
 
     public void RemoveHeart()
     {
-
         hearts[health - 1].SetActive(false);
         health -= 1;
     }
 
     public void AddHeart()
     {
-        hearts[health].SetActive(true);
-        health += 1;
+        if (health < 3)
+        {
+            hearts[health].SetActive(true);
+            health += 1;
+        }
     }
 
     public void ResetHearts()

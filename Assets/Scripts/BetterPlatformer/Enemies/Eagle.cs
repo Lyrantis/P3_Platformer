@@ -16,6 +16,9 @@ public class Eagle : MonoBehaviour
     [SerializeField] Transform edgeCheckBox;
     [SerializeField] LayerMask collisionLayer;
     [SerializeField] Vector2 edgeCheckOffset;
+    [SerializeField] GameObject player;
+
+    private Vector2 startPos;
 
     Vector2 edgeCheckSize;
     Vector2 edgeCheckPos;
@@ -27,6 +30,7 @@ public class Eagle : MonoBehaviour
     bool wallCheck;
     float direction;
     bool angry = false;
+    bool returningToStart = false;
     public float angrySpeedMultiplier;
     public float AttackCooldown;
     bool ableToAttack = true;
@@ -39,6 +43,7 @@ public class Eagle : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
+        startPos = transform.position;
     }
     // Start is called before the first frame update
     void Start()
@@ -62,33 +67,38 @@ public class Eagle : MonoBehaviour
     {
         if (moving)
         {
-            edgeCheckPos = edgeCheckBox.position;
-            wallCheckPos = new Vector2(transform.position.x + (direction * wallCheckOffset), transform.position.y);
-
-            edgeCheck = Physics2D.OverlapBox(edgeCheckPos, edgeCheckSize, 0, collisionLayer);
-            wallCheck = Physics2D.OverlapBox(wallCheckPos, wallCheckSize, 0, collisionLayer);
-
-            if (!edgeCheck || wallCheck)
+            if (angry)
             {
-                moving = false;
+                transform.position = Vector2.MoveTowards(transform.position, player.transform.position, moveSpeed * angrySpeedMultiplier * Time.deltaTime);
+            }
+            else if (returningToStart)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, startPos, moveSpeed);
+            }
+            else
+            {
+                edgeCheckPos = edgeCheckBox.position;
+                wallCheckPos = new Vector2(transform.position.x + (direction * wallCheckOffset), transform.position.y);
 
-                rb.velocity = new Vector2(0.0f, 0.0f);
-                StartCoroutine(WaitAtEdge(timeBetweenTurn));
+                edgeCheck = Physics2D.OverlapBox(edgeCheckPos, edgeCheckSize, 0, collisionLayer);
+                wallCheck = Physics2D.OverlapBox(wallCheckPos, wallCheckSize, 0, collisionLayer);
+
+                if (!edgeCheck || wallCheck)
+                {
+                    moving = false;
+;
+                    StartCoroutine(WaitAtEdge(timeBetweenTurn));
+                }
+                else
+                {
+                    transform.position = new Vector2(transform.position.x + (moveSpeed * direction * Time.deltaTime), transform.position.y);
+                }
             }
         }
     }
 
     private void FixedUpdate()
     {
-
-        if (moving)
-        {
-            if (angry)
-            {
-                rb.velocity = new Vector2(direction * moveSpeed * angrySpeedMultiplier, rb.velocity.y);
-            }
-            rb.velocity = new Vector2(direction * moveSpeed, rb.velocity.y);
-        }
 
     }
 
@@ -130,11 +140,6 @@ public class Eagle : MonoBehaviour
 
         ChangeDirection();
 
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        angry = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -183,6 +188,11 @@ public class Eagle : MonoBehaviour
             UIManager.Instance.AddScore(100);
         }
 
+    }
+
+    public void SetAngry(bool newValue)
+    {
+        angry = newValue;
     }
 
 }

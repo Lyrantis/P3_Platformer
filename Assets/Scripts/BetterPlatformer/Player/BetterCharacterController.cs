@@ -11,6 +11,12 @@ using UnityEngine.InputSystem;
 //--------------------------------------------
 public class BetterCharacterController : MonoBehaviour
 {
+
+    [SerializeField] GameObject AttackBox;
+    public float attackTime = 1.0f;
+    public float attackCooldown = 1.0f;
+    private bool canAttack = true;
+
     protected bool facingRight = true;
     protected bool jumped;
     bool jumping = false;
@@ -60,6 +66,7 @@ public class BetterCharacterController : MonoBehaviour
         charCollision = GetComponent<Collider2D>();
         playerSize = charCollision.bounds.extents;
         boxSize = new Vector2(playerSize.x, 0.05f);
+        AttackBox.SetActive(false);
 
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
@@ -69,6 +76,7 @@ public class BetterCharacterController : MonoBehaviour
         playerInputActions.Player.Crouch.canceled += Crouch;
         playerInputActions.Player.Slide.performed += Slide;
         playerInputActions.Player.Slide.canceled += Slide;
+        playerInputActions.Player.Attack.performed += Attack;
     }
 
     void FixedUpdate()
@@ -220,9 +228,34 @@ public class BetterCharacterController : MonoBehaviour
 
     }
 
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (canAttack)
+        {
+            AttackBox.SetActive(true);
+            canAttack = false;
+            StartCoroutine(StopAttacking());
+        }
+    }
+
+    IEnumerator StopAttacking()
+    {
+        yield return new WaitForSeconds(attackTime);
+
+        AttackBox.SetActive(false);
+        StartCoroutine(AttackCooldown());
+
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(attackCooldown);
+
+        canAttack = true;
+    }
+
     public void TakeDamage()
     {
-
         takingDamage = true;
         anim.SetBool("Damaged", true);
         playerInputActions.Disable();
@@ -239,7 +272,6 @@ public class BetterCharacterController : MonoBehaviour
         anim.SetBool("Damaged", false);
 
         StartCoroutine(BecomeVulnerable(iFrameTime));
-
 
     }
 
