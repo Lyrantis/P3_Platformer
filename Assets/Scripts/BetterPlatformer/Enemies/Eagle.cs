@@ -17,6 +17,7 @@ public class Eagle : MonoBehaviour
     [SerializeField] LayerMask collisionLayer;
     [SerializeField] Vector2 edgeCheckOffset;
     [SerializeField] GameObject player;
+    [SerializeField] GameObject visionBox;
 
     private Vector2 startPos;
 
@@ -33,6 +34,7 @@ public class Eagle : MonoBehaviour
     bool returningToStart = false;
     public float angrySpeedMultiplier;
     public float AttackCooldown;
+    private float attackRange = 1.0f;
     bool ableToAttack = true;
 
     bool moving = true;
@@ -70,10 +72,33 @@ public class Eagle : MonoBehaviour
             if (angry)
             {
                 transform.position = Vector2.MoveTowards(transform.position, player.transform.position, moveSpeed * angrySpeedMultiplier * Time.deltaTime);
+
+                float dist = new Vector2(transform.position.x - player.transform.position.x, transform.position.y - player.transform.position.y).magnitude;
+
+                Debug.Log(dist);
+                if (dist <= attackRange)
+                {
+                    player.GetComponent<HealthComponent>().TakeDamage(1);
+                    SetAngry(false);
+                }
             }
             else if (returningToStart)
             {
-                transform.position = Vector2.MoveTowards(transform.position, startPos, moveSpeed);
+                transform.position = Vector2.MoveTowards(transform.position, startPos, moveSpeed * Time.deltaTime);
+
+                if (transform.position.x - startPos.x > 0 && facingRight)
+                {
+                    ChangeDirection();
+                }
+                else if (transform.position.x - startPos.x <  0 && !facingRight)
+                {
+
+                }
+
+                if (transform.position.x == startPos.x && transform.position.y == startPos.y)
+                {
+                    returningToStart = false;
+                }
             }
             else
             {
@@ -110,6 +135,7 @@ public class Eagle : MonoBehaviour
             if (facingRight)
             {
                 sr.flipX = true;
+                
             }
             else
             {
@@ -129,6 +155,7 @@ public class Eagle : MonoBehaviour
             }
         }
 
+        visionBox.transform.localPosition = new Vector2(visionBox.transform.position.x * -1, visionBox.transform.position.y);
         edgeCheckBox.localPosition = new Vector2(direction * edgeCheckOffset.x, edgeCheckOffset.y);
 
         moving = true;
@@ -141,12 +168,6 @@ public class Eagle : MonoBehaviour
         ChangeDirection();
 
     }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        angry = false;
-    }
-
 
     IEnumerator Cooldown(float cooldown)
     {
@@ -193,6 +214,11 @@ public class Eagle : MonoBehaviour
     public void SetAngry(bool newValue)
     {
         angry = newValue;
+
+        if (!angry)
+        {
+            returningToStart = true;
+        }
     }
 
 }

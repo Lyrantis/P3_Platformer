@@ -25,7 +25,6 @@ public class HealthComponent : MonoBehaviour
 
     public void TakeDamage(int Damage)
     {
-        Debug.Log("Ouch cunt");
         if (!takingDamage)
         {
             currentHealth -= Damage;
