@@ -155,7 +155,7 @@ public class Eagle : MonoBehaviour
             }
         }
 
-        visionBox.transform.localPosition = new Vector2(visionBox.transform.position.x * -1, visionBox.transform.position.y);
+        visionBox.transform.localPosition = new Vector2(visionBox.transform.localPosition.x * -1, visionBox.transform.localPosition.y);
         edgeCheckBox.localPosition = new Vector2(direction * edgeCheckOffset.x, edgeCheckOffset.y);
 
         moving = true;
